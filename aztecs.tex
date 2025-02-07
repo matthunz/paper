@@ -33,14 +33,26 @@
 \begin{document}
 
 \begin{abstract}
-    An Entity Component System, or ECS,
-    is a modern approach to organizing your application state as a database,
-    providing patterns for data-oriented design and parallel processing.
+  An Entity Component System, or ECS,
+  is a modern approach to organizing your application state as a database,
+  providing patterns for data-oriented design and parallel processing.
+
+  An ECS is comprised of three main concepts:
+  \begin{itemize}
+    \item \textbf{Entities}: An \textit{entity} represents a general-purpose object. In a game engine
+          context, for example, every coarse game object is represented as an
+          entity.~\cite{ecsWiki} Aztecs represents entities as a unique integer
+          identifier, similar to other ECS implementations.
+    \item \textbf{Components}: A \textit{component} holds the data for a particular aspect of an entity.
+          For example, a zombie entity in a game might have a Health and a Transform component.
+    \item \textbf{Systems}: A \textit{system} is a pipeline that processes entities and their components.
+  \end{itemize}
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
+
 \begin{lstlisting}
 import Control.Arrow ((>>>))
 import Data.Aztecs
@@ -72,5 +84,8 @@ move =
 main :: IO ()
 main = runSystem_ $ setup >>> S.forever move
 \end{lstlisting}
+
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
