@@ -1,0 +1,76 @@
+\documentclass[sigplan,screen,nonacm]{acmart}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Define Haskell syntax highlighting
+\lstdefinelanguage{Haskell}{
+  keywords={let, in, where, data, type, if, then, else, case, of, do, module, import, deriving, instance, class},
+  keywordstyle=\color{blue}\bfseries,
+  comment=[l]--,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  morestring=[b]",
+  morestring=[b]'
+}
+\lstset{
+  language=Haskell,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  tabsize=2,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  captionpos=b
+}
+
+\title{Aztecs: An Empirical Entity Component System (ECS) for Haskell}
+\author{Matt Hunzinger}
+\email{matt@hunzinger.me}
+
+\begin{document}
+
+\begin{abstract}
+    An Entity Component System, or ECS,
+    is a modern approach to organizing your application state as a database,
+    providing patterns for data-oriented design and parallel processing.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\begin{lstlisting}
+import Control.Arrow ((>>>))
+import Data.Aztecs
+import qualified Data.Aztecs.Access as A
+import qualified Data.Aztecs.Query as Q
+import qualified Data.Aztecs.System as S
+
+newtype Position = Position Int deriving (Show)
+
+instance Component Position
+
+newtype Velocity = Velocity Int deriving (Show)
+
+instance Component Velocity
+
+setup :: System () ()
+setup = S.queue . const . A.spawn_ $ bundle (Position 0) <> bundle (Velocity 1)
+
+move :: System () ()
+move =
+    S.map
+    ( proc () -> do
+        Velocity v <- Q.fetch -< ()
+        Position p <- Q.fetch -< ()
+        Q.set -< Position $ p + v
+    )
+    >>> S.run print
+
+main :: IO ()
+main = runSystem_ $ setup >>> S.forever move
+\end{lstlisting}
+
+\end{document}
