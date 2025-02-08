@@ -28,6 +28,7 @@
 \maketitle
 
 \section{Introduction}
+Aztecs implements an Entity Component System (ECS) in Haskell, providing a type-safe and composable DSL.
 
 \begin{code}
 import Control.Arrow ((>>>))
@@ -80,20 +81,20 @@ be stored in its unique storage.
     \toprule
     \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
     Health                   &
-    \begin{tabular}{l rrr}
+    \begin{tabular}{l}
       0 \\
       1 \\
     \end{tabular} &
-    \begin{tabular}{l rrr}
+    \begin{tabular}{r}
       100 \\
       50  \\
     \end{tabular}                                        \\
     Damage                   &
-    \begin{tabular}{l rrr}
+    \begin{tabular}{l}
       0 \\
       1 \\
     \end{tabular} &
-    \begin{tabular}{l rrr}
+    \begin{tabular}{r}
       10 \\
       20 \\
     \end{tabular}                                        \\ \bottomrule
@@ -146,13 +147,7 @@ procedure:
           \begin{tabular}{l rrr rrr rrr}
             \toprule
             \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health                   &
-            \begin{tabular}{l rrr}
-              1 \\
-            \end{tabular} &
-            \begin{tabular}{l rrr}
-              50 \\
-            \end{tabular}                                        \\ \bottomrule
+            Health                   & 1                  & 50             \\ \bottomrule
           \end{tabular}
         \end{table}
         \begin{table}[H]
@@ -173,20 +168,20 @@ procedure:
             \toprule
             \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
             Health                   &
-            \begin{tabular}{l rrr}
+            \begin{tabular}{l}
               0 \\
               1 \\
             \end{tabular} &
-            \begin{tabular}{l rrr}
+            \begin{tabular}{r}
               100 \\
               50  \\
             \end{tabular}                                        \\
             Damage                   &
-            \begin{tabular}{l rrr}
+            \begin{tabular}{l}
               0 \\
               1 \\
             \end{tabular} &
-            \begin{tabular}{l rrr}
+            \begin{tabular}{r}
               10 \\
               20 \\
             \end{tabular}                                        \\ \bottomrule
@@ -194,6 +189,7 @@ procedure:
         \end{table}
 \end{enumerate}
 
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end {document}
-
