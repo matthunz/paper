@@ -1,6 +1,6 @@
 \documentclass[sigplan,dvipsnames,nonacm]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 
-%include lhs2TeX.fmt
+%include polycode.fmt
 
 \title{Aztecs: An Empirical Entity Component System (ECS) for Haskell}
 \author{Matt Hunzinger}
@@ -33,12 +33,23 @@ Aztecs implements an Entity Component System (ECS) in Haskell, providing a type-
 \begin{code}
 {-# LANGUAGE Arrows #-}
 
-import Control.Arrow ((>>>))
+module Aztecs where
+
+import Control.Arrow
 import Data.Aztecs
 import qualified Data.Aztecs.Access as A
 import qualified Data.Aztecs.Query as Q
 import qualified Data.Aztecs.System as S
+\end{code}
 
+\section{Components}
+
+Components are the building blocks of entities in an ECS.
+In Aztecs, a \texttt{Component} is a typeclass that defines its storage.
+By default, a component is stored in a \texttt{IntMap}.
+
+\begin{figure}[H]
+\begin{code}
 newtype Position = Position Int deriving (Show)
 
 instance Component Position
@@ -46,24 +57,75 @@ instance Component Position
 newtype Velocity = Velocity Int deriving (Show)
 
 instance Component Velocity
+\end{code}
+\caption{Defining a \texttt{Position} and \texttt{Velocity} component}
+\end{figure}
 
-setup :: System () ()
-setup = S.queue . const . A.spawn_ $
-    bundle (Position 0) <> bundle (Velocity 1)
+\section{Queries}
 
-move :: System () ()
-move =
-    S.map
-    ( proc () -> do
+\begin{figure}[H]
+\begin{code}
+query :: (Monad m) => Query m () Position
+query = proc () -> do
         Velocity v <- Q.fetch -< ()
         Position p <- Q.fetch -< ()
         Q.set -< Position $ p + v
-    )
-    >>> S.run print
-
-main :: IO ()
-main = runSystem_ $ setup >>> S.forever move
 \end{code}
+\caption{Do notation}
+\end{figure}
+
+\begin{figure}[H]
+\begin{code}
+query' :: (Monad m) => Query m () Position
+query' =
+  Q.fetch 
+    &&& Q.fetch
+    >>> arr (\(Position p, Velocity v) -> Position $ p + v)
+    >>> Q.set
+\end{code}
+\caption{Arrow combinators}
+\end{figure}
+
+\begin{figure}[H]
+\begin{code}
+query'' :: (Monad m) => Query m () Position
+query'' =
+  (,)
+    <$> Q.fetch
+    <*> Q.fetch
+    >>> arr (\(Position p, Velocity v) -> Position $ p + v)
+    >>> Q.set
+\end{code}
+\caption{Applicative combinators}
+\end{figure}
+
+\section{Systems}
+Systems can run in two ways:
+
+\subsection{Access}
+
+Full \texttt{Access} to the \texttt{World} can be queued to run after a system is complete.
+
+\begin{figure}[H]
+\begin{code}
+setup :: System () ()
+setup = S.queue . const . A.spawn_ 
+  $ bundle (Position 0) <> bundle (Velocity 1)
+\end{code}
+\caption{System that queues access to setup an entity with a \texttt{Position} and \texttt{Velocity} component}
+\end{figure}
+
+\subsection{Queries}
+
+\begin{figure}[H]
+\begin{code}
+move :: System () ()
+move = S.map query >>> S.run print
+\end{code}
+\caption{System that queries all \texttt{Position} and \texttt{Velocity} components and applies the update}
+\end{figure}
+
+
 
 \section{Implementation}
 
