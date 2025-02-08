@@ -31,6 +31,8 @@
 Aztecs implements an Entity Component System (ECS) in Haskell, providing a type-safe and composable DSL.
 
 \begin{code}
+{-# LANGUAGE Arrows #-}
+
 import Control.Arrow ((>>>))
 import Data.Aztecs
 import qualified Data.Aztecs.Access as A
