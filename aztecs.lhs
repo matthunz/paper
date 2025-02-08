@@ -1,36 +1,12 @@
-\documentclass[sigplan,screen,nonacm]{acmart}
-\usepackage{listings}
-\usepackage{xcolor}
+\documentclass[sigplan,dvipsnames,nonacm]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 
-% Define Haskell syntax highlighting
-\lstdefinelanguage{Haskell}{
-  keywords={let, in, where, data, type, if, then, else, case, of, do, module, import, deriving, instance, class},
-  keywordstyle=\color{blue}\bfseries,
-  comment=[l]--,
-  commentstyle=\color{gray}\itshape,
-  stringstyle=\color{red},
-  morestring=[b]",
-  morestring=[b]'
-}
-\lstset{
-  language=Haskell,
-  basicstyle=\ttfamily\small,
-  numbers=left,
-  numberstyle=\tiny\color{gray},
-  stepnumber=1,
-  numbersep=8pt,
-  tabsize=2,
-  showstringspaces=false,
-  breaklines=true,
-  frame=single,
-  captionpos=b
-}
+%include lhs2TeX.fmt
 
 \title{Aztecs: An Empirical Entity Component System (ECS) for Haskell}
 \author{Matt Hunzinger}
-\email{matt@hunzinger.me}
+\email{matt@@hunzinger.me}
 
-\begin{document}
+\begin {document}
 
 \begin{abstract}
   An Entity Component System, or ECS,
@@ -53,140 +29,7 @@
 
 \section{Introduction}
 
-Test
-
-\section{Implementation}
-
-\subsection{Archetypes}
-
-Archetypes are groups of unique component storages.\par
-
-For example, if an entity \textbf{0} has a \textit{Health} component with value
-\textbf{100} and \textit{Damage} component with value \textbf{50}, the
-components would be stored together in an archetype, and each component would
-be stored in its unique storage.
-
-\begin{table}[H]
-  \centering
-  \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
-  \begin{tabular}{@{}lll@{}}
-    \toprule
-    \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-    Health             & 0                  & 100            \\
-    Damage             & 0                  & 10             \\ \bottomrule
-  \end{tabular}
-\end{table}
-
-Now if we spawn an entity \textbf{1} that has a \textit{Health} component with
-value \textbf{50} and \textit{Damage} component with value \textbf{20}, the
-matching components would be stored together in the same archetype.
-\begin{table}[H]
-  \centering
-  \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
-  \begin{tabular}{@{}lll@{}}
-    \toprule
-    \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-    Health                   &
-    \begin{tabular}{@{}l@{}}
-      0 \\
-      1 \\
-    \end{tabular} &
-    \begin{tabular}{@{}l@{}}
-      100 \\
-      50  \\
-    \end{tabular}                                        \\
-    Damage                   &
-    \begin{tabular}{@{}l@{}}
-      0 \\
-      1 \\
-    \end{tabular} &
-    \begin{tabular}{@{}l@{}}
-      10 \\
-      20 \\
-    \end{tabular}                                        \\ \bottomrule
-  \end{tabular}
-\end{table}
-
-Alternatively, we can insert components into existing entities such as this
-example procedure:
-\begin{enumerate}
-  \item Spawn an entity with a \textit{Health} component
-        \begin{table}[H]
-          \centering
-          \caption{Archetype for \textit{Health} components}\label{tab:nested}
-          \begin{tabular}{@{}lll@{}}
-            \toprule
-            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health             & 0                  & 100            \\ \bottomrule
-          \end{tabular}
-        \end{table}
-  \item Insert a \textit{Damage} component
-        \begin{table}[H]
-          \centering
-          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
-          \begin{tabular}{@{}lll@{}}
-            \toprule
-            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health             & 0                  & 100            \\
-            Damage             & 0                  & 10             \\ \bottomrule
-          \end{tabular}
-        \end{table}
-  \item Spawn another enitity with a \textit{Health} component
-        \begin{table}[H]
-          \centering
-          \caption{Archetype for \textit{Health} components}\label{tab:nested}
-          \begin{tabular}{@{}lll@{}}
-            \toprule
-            \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health                   &
-            \begin{tabular}{@{}l@{}}
-              1 \\
-            \end{tabular} &
-            \begin{tabular}{@{}l@{}}
-              50 \\
-            \end{tabular}                                        \\ \bottomrule
-          \end{tabular}
-        \end{table}
-        \begin{table}[H]
-          \centering
-          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
-          \begin{tabular}{@{}lll@{}}
-            \toprule
-            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health             & 0                  & 100            \\
-            Damage             & 0                  & 10             \\ \bottomrule
-          \end{tabular}
-        \end{table}
-  \item Insert a \textit{Damage} component into entity \textbf{1}
-        \begin{table}[H]
-          \centering
-          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
-          \begin{tabular}{@{}lll@{}}
-            \toprule
-            \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
-            Health                   &
-            \begin{tabular}{@{}l@{}}
-              0 \\
-              1 \\
-            \end{tabular} &
-            \begin{tabular}{@{}l@{}}
-              100 \\
-              50  \\
-            \end{tabular}                                        \\
-            Damage                   &
-            \begin{tabular}{@{}l@{}}
-              0 \\
-              1 \\
-            \end{tabular} &
-            \begin{tabular}{@{}l@{}}
-              10 \\
-              20 \\
-            \end{tabular}                                        \\ \bottomrule
-          \end{tabular}
-        \end{table}
-\end{enumerate}
-
-\begin{lstlisting}
+\begin{code}
 import Control.Arrow ((>>>))
 import Data.Aztecs
 import qualified Data.Aztecs.Access as A
@@ -202,7 +45,8 @@ newtype Velocity = Velocity Int deriving (Show)
 instance Component Velocity
 
 setup :: System () ()
-setup = S.queue . const . A.spawn_ $ bundle (Position 0) <> bundle (Velocity 1)
+setup = S.queue . const . A.spawn_ $
+    bundle (Position 0) <> bundle (Velocity 1)
 
 move :: System () ()
 move =
@@ -216,9 +60,140 @@ move =
 
 main :: IO ()
 main = runSystem_ $ setup >>> S.forever move
-\end{lstlisting}
+\end{code}
 
-\bibliographystyle{plain}
-\bibliography{references}
+\section{Implementation}
 
-\end{document}
+\subsection{Archetypes}
+
+Archetypes are groups of unique component storages.\par
+
+For example, if an entity \textbf{0} has a \textit{Health} component with value
+\textbf{100} and \textit{Damage} component with value \textbf{50}, the
+components would be stored together in an archetype, and each component would
+be stored in its unique storage.
+
+\begin{table}[H]
+  \centering
+  \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
+  \begin{tabular}{l rrr rrr rrr}
+    \toprule
+    \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+    Health                   &
+    \begin{tabular}{l rrr}
+      0 \\
+      1 \\
+    \end{tabular} &
+    \begin{tabular}{l rrr}
+      100 \\
+      50  \\
+    \end{tabular}                                        \\
+    Damage                   &
+    \begin{tabular}{l rrr}
+      0 \\
+      1 \\
+    \end{tabular} &
+    \begin{tabular}{l rrr}
+      10 \\
+      20 \\
+    \end{tabular}                                        \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+Now if we spawn an entity \textbf{1} that has a \textit{Health} component with
+value \textbf{50} and \textit{Damage} component with value \textbf{20}, the
+matching components would be stored together in the same archetype.
+
+\begin{table}[H]
+  \centering
+  \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
+  \begin{tabular}{l rrr rrr rrr}
+    \toprule
+    \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+    Health             & 0                  & 100            \\
+    Damage             & 0                  & 10             \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+Alternatively, we can insert components into existing entities such as this example
+procedure:
+\begin{enumerate}
+  \item Spawn an entity with a \textit{Health} component
+        \begin{table}[H]
+          \centering
+          \caption{Archetype for \textit{Health} components}\label{tab:nested}
+          \begin{tabular}{l rrr rrr rrr}
+            \toprule
+            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+            Health             & 0                  & 100            \\ \bottomrule
+          \end{tabular}
+        \end{table}
+  \item Insert a \textit{Damage} component
+        \begin{table}[H]
+          \centering
+          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
+          \begin{tabular}{l rrr rrr rrr}
+            \toprule
+            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+            Health             & 0                  & 100            \\
+            Damage             & 0                  & 10             \\ \bottomrule
+          \end{tabular}
+        \end{table}
+  \item Spawn another enitity with a \textit{Health} component
+        \begin{table}[H]
+          \centering
+          \caption{Archetype for \textit{Health} components}\label{tab:nested}
+          \begin{tabular}{l rrr rrr rrr}
+            \toprule
+            \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+            Health                   &
+            \begin{tabular}{l rrr}
+              1 \\
+            \end{tabular} &
+            \begin{tabular}{l rrr}
+              50 \\
+            \end{tabular}                                        \\ \bottomrule
+          \end{tabular}
+        \end{table}
+        \begin{table}[H]
+          \centering
+          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
+          \begin{tabular}{l rrr rrr rrr}
+            \toprule
+            \textbf{Component} & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+            Health             & 0                  & 100            \\
+            Damage             & 0                  & 10             \\ \bottomrule
+          \end{tabular}
+        \end{table}
+  \item Insert a \textit{Damage} component into entity \textbf{1}
+        \begin{table}[H]
+          \centering
+          \caption{Archetype for \textit{Health} and \textit{Damage} components}\label{tab:nested}
+          \begin{tabular}{l rrr rrr rrr}
+            \toprule
+            \textbf{Component}       & \textbf{Entity ID} & \textbf{Value} \\ \midrule
+            Health                   &
+            \begin{tabular}{l rrr}
+              0 \\
+              1 \\
+            \end{tabular} &
+            \begin{tabular}{l rrr}
+              100 \\
+              50  \\
+            \end{tabular}                                        \\
+            Damage                   &
+            \begin{tabular}{l rrr}
+              0 \\
+              1 \\
+            \end{tabular} &
+            \begin{tabular}{l rrr}
+              10 \\
+              20 \\
+            \end{tabular}                                        \\ \bottomrule
+          \end{tabular}
+        \end{table}
+\end{enumerate}
+
+
+\end {document}
+
