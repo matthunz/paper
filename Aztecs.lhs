@@ -42,7 +42,7 @@ import qualified Data.Aztecs.Query as Q
 import qualified Data.Aztecs.System as S
 \end{code}
 
-\section{Components}
+\subsection{Components}
 
 Components are the building blocks of entities in an ECS.
 In Aztecs, a \texttt{Component} is a typeclass that defines its storage.
@@ -61,7 +61,7 @@ instance Component Velocity
 \caption{Defining a \texttt{Position} and \texttt{Velocity} component}
 \end{figure}
 
-\section{Queries}
+\subsection{Queries}
 Queries can be used to read and write components in a \texttt{World}.
 By taking advantage of arrows, a \texttt{Query} can be composed with Haskell language extensions
 or \texttt{Arrow} and \texttt{Applicative} combinators.
@@ -101,10 +101,10 @@ query'' =
 \caption{Applicative combinators}
 \end{figure}
 
-\section{Systems}
+\subsection{Systems}
 Systems can run in two ways:
 
-\subsection{Access}
+\subsubsection{Access}
 
 Full \texttt{Access} to the \texttt{World} can be queued to run after a system is complete.
 
@@ -117,7 +117,7 @@ setup = S.queue . const . A.spawn_
 \caption{System that queues access to setup an entity with a \texttt{Position} and \texttt{Velocity} component}
 \end{figure}
 
-\subsection{Queries}
+\subsubsection{Queries}
 
 \begin{figure}[H]
 \begin{code}
@@ -126,8 +126,6 @@ move = S.map query >>> S.run print
 \end{code}
 \caption{System that queries all \texttt{Position} and \texttt{Velocity} components and applies the update}
 \end{figure}
-
-
 
 \section{Implementation}
 
