@@ -62,7 +62,9 @@ instance Component Velocity
 \end{figure}
 
 \section{Queries}
-
+Queries can be used to read and write components in a \texttt{World}.
+By taking advantage of arrows, a \texttt{Query} can be composed with Haskell language extensions
+or \texttt{Arrow} and \texttt{Applicative} combinators.
 \begin{figure}[H]
 \begin{code}
 query :: (Monad m) => Query m () Position
