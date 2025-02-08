@@ -1,12 +1,85 @@
 \documentclass[sigplan,dvipsnames,nonacm]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
 
+\usepackage{listings}
+
 %include polycode.fmt
 
 \title{Aztecs: An Empirical Entity Component System (ECS) for Haskell}
 \author{Matt Hunzinger}
 \email{matt@@hunzinger.me}
 
+
 \begin {document}
+
+\definecolor{dkcyan}{rgb}{0.1, 0.3, 0.3}
+\definecolor{dkgreen}{rgb}{0,0.3,0}
+\definecolor{olive}{rgb}{0.5, 0.5, 0.0}
+\definecolor{dkblue}{rgb}{0,0.1,0.5}
+\definecolor{col:ln}{rgb}  {0.1, 0.1, 0.7}
+\definecolor{col:str}{rgb} {0.8, 0.0, 0.0}
+\definecolor{col:db}{rgb}  {0.9, 0.5, 0.0}
+\definecolor{col:ours}{rgb}{0.0, 0.7, 0.0}
+\definecolor{lightgreen}{RGB}{170, 255, 220}
+\definecolor{darkbrown}{RGB}{121,37,0}
+
+\colorlet{listing-comment}{gray}
+\colorlet{operator-color}{darkbrown}
+
+\lstdefinestyle{default}{
+    basicstyle=\ttfamily\fontsize{8.7}{9.5}\selectfont,
+    columns=fullflexible,
+    commentstyle=\sffamily\color{black!50!white},
+    escapechar=\#,
+    framexleftmargin=1em,
+    framexrightmargin=1ex,
+    keepspaces=true,
+    keywordstyle=\color{dkblue},
+    mathescape,
+    numbers=none,
+    numberblanklines=false,
+    numbersep=1.25em,
+    numberstyle=\relscale{0.8}\color{gray}\ttfamily,
+    showstringspaces=true,
+    stepnumber=1,
+    xleftmargin=1em
+}
+
+\lstdefinelanguage{custom-haskell}{
+    language=Haskell,
+    deletekeywords={lookup, delete, map, mapMaybe, Ord, Maybe, String, Just, Nothing, Int, Bool},
+    keywordstyle=[2]\color{dkgreen},
+    morekeywords=[2]{String, Map, Ord, Maybe, Int, Bool},
+    morekeywords=[2]{Name, Expression, ESummary, PosTree, Structure, HashCode, VarMap},
+    keywordstyle=[3]\color{dkcyan},
+    mathescape=false, % so that we can write infix $
+    escapechar=\%,    % ... but still have a way to write math between % %
+    literate=%
+        {=}{{{\color{operator-color}=}}}1
+        {||}{{{\color{operator-color}||}}}1
+        {\\}{{{\color{operator-color}\textbackslash$\,\!$}}}1
+        {.}{{{\color{operator-color}.}}}1
+        {=>}{{{\color{operator-color}=>}}}1
+        {->}{{{\color{operator-color}->}}}1
+        {<-}{{{\color{operator-color}<-}}}1
+        {::}{{{\color{operator-color}::}}}1
+}
+
+\lstset{style=default}
+% Environment for code snippets
+\lstnewenvironment{code}[1][]
+  {\small\lstset{language=custom-haskell,#1}}
+  {}
+
+%include haskell.fmt
+\newcommand{\keyword}[1]{\textcolor{BlueViolet}{\textbf{#1}}}
+\newcommand{\id}[1]{\textsf{\textsl{#1}}}
+\newcommand{\varid}[1]{\textcolor{Sepia}{\id{#1}}}
+\newcommand{\conid}[1]{\textcolor{OliveGreen}{\id{#1}}}
+\newcommand{\tick}{\text{\textquoteright}}
+\newcommand{\package}[1]{\textsf{#1}}
+
+\setlength\mathindent{0em}
+\renewcommand{\hscodestyle}{\small}
 
 \begin{abstract}
   An Entity Component System, or ECS,
